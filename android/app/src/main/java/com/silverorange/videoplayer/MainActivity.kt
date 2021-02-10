@@ -4,7 +4,6 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
@@ -29,6 +28,9 @@ class MainActivity : AppCompatActivity() {
 
     private var showControls = false
     private var currentVideo = 0
+
+    private var prevButtonAlpha: Float = 1f
+    private var nextButtonAlpha: Float = 1f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,17 +61,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         bind.playerLayout.setOnClickListener {
-            Toast.makeText(this, "Clicked", Toast.LENGTH_SHORT).show()
-            if (showControls) {
-                bind.playPause.visibility = View.GONE
-                bind.next.visibility = View.GONE
-                bind.previous.visibility = View.GONE
-                showControls = false
+            showControls = if (showControls) {
+                hideControls()
+                false
             } else {
-                bind.playPause.visibility = View.VISIBLE
-                bind.next.visibility = View.VISIBLE
-                bind.previous.visibility = View.VISIBLE
-                showControls = true
+                showControls()
+                true
             }
         }
 
@@ -82,14 +79,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun showControls() {
+        bind.next.alpha = nextButtonAlpha
+        bind.previous.alpha = prevButtonAlpha
+
+        bind.playPause.visibility = View.VISIBLE
+        bind.next.visibility = View.VISIBLE
+        bind.previous.visibility = View.VISIBLE
+    }
+
+    private fun hideControls() {
+        prevButtonAlpha = bind.previous.alpha
+        nextButtonAlpha = bind.next.alpha
+
+        bind.playPause.visibility = View.GONE
+        bind.next.visibility = View.GONE
+        bind.previous.visibility = View.GONE
+    }
+
     private fun nextVideo() {
-        Toast.makeText(this, "Next Video", Toast.LENGTH_SHORT).show()
-        if ((currentVideo + 1) <= videos.size) {
+        if ((currentVideo + 1) < videos.size) {
             player.stop()
             loadVideo(videos[currentVideo + 1], currentVideo + 1)
             currentVideo++
         } else {
-            Toast.makeText(this, "No more videos!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "This is the last video!", Toast.LENGTH_SHORT).show()
+            bind.next.alpha = 0.6f
         }
     }
 
@@ -100,12 +115,14 @@ class MainActivity : AppCompatActivity() {
             currentVideo--
         } else {
             Toast.makeText(this, "This is the first video!", Toast.LENGTH_SHORT).show()
+            bind.previous.alpha = 0.6f
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun loadData(jsonData: String) {
         val jsonArray = JSONArray(jsonData)
+        // Load the JSON data into a list of VideoObjects
         for (i in 0 until jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(i)
             val video = VideoObject()
@@ -126,12 +143,6 @@ class MainActivity : AppCompatActivity() {
 
         // Load First Video
         loadVideo(videos[0], 0)
-
-        // Attempt Margin fix
-        val params = bind.playPause.layoutParams as ViewGroup.MarginLayoutParams
-        val playerHeight = bind.player.height
-        params.setMargins(0, playerHeight / 2, 0, 0)
-        bind.playPause.layoutParams = params
     }
 
     private fun loadVideo(video: VideoObject, position: Int) {
@@ -144,13 +155,23 @@ class MainActivity : AppCompatActivity() {
         bind.videoAuthor.text = video.author!!.name
         markwon.setMarkdown(bind.videoDetails, video.description!!)
 
-        // Next/Prev button logic
-//        if (position == 0) {
-//            bind.previous.isEnabled = false
-//        }
-//        if (position == videos.size - 1) {
-//            bind.next.isEnabled = false
-//        }
+        showControls = true
+
+        // Next/Previous enable or disable based on position
+        when (position) {
+            0 -> {
+                bind.previous.alpha = 0.6f
+                bind.next.alpha = 1f
+            }
+            (videos.size - 1) -> {
+                bind.next.alpha = 0.6F
+                bind.previous.alpha = 1f
+            }
+            else -> {
+                bind.next.alpha = 1f
+                bind.previous.alpha = 1f
+            }
+        }
     }
 
     override fun onBackPressed() {
