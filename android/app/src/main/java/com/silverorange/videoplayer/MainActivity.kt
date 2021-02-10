@@ -80,50 +80,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // When player is clicked and controls are hidden, show them
-    private fun showControls() {
-        bind.next.alpha = nextButtonAlpha
-        bind.previous.alpha = prevButtonAlpha
-
-        bind.playPause.visibility = View.VISIBLE
-        bind.next.visibility = View.VISIBLE
-        bind.previous.visibility = View.VISIBLE
-    }
-
-    // When player is clicked and controls are visible, hide them
-    private fun hideControls() {
-        prevButtonAlpha = bind.previous.alpha
-        nextButtonAlpha = bind.next.alpha
-
-        bind.playPause.visibility = View.GONE
-        bind.next.visibility = View.GONE
-        bind.previous.visibility = View.GONE
-    }
-
-    // Next button must load the next video
-    private fun nextVideo() {
-        if ((currentVideo + 1) < videos.size) {
-            player.stop()
-            loadVideo(videos[currentVideo + 1], currentVideo + 1)
-            currentVideo++
-        } else {
-            Toast.makeText(this, "This is the last video!", Toast.LENGTH_SHORT).show()
-            bind.next.alpha = 0.6f
-        }
-    }
-
-    // Previous button must load the previous video
-    private fun previousVideo() {
-        if ((currentVideo - 1) >= 0) {
-            player.stop()
-            loadVideo(videos[currentVideo - 1], currentVideo - 1)
-            currentVideo--
-        } else {
-            Toast.makeText(this, "This is the first video!", Toast.LENGTH_SHORT).show()
-            bind.previous.alpha = 0.6f
-        }
-    }
-
     // Load the data from the API request into an list of VideoObjects
     @RequiresApi(Build.VERSION_CODES.O)
     private fun loadData(jsonData: String) {
@@ -178,6 +134,50 @@ class MainActivity : AppCompatActivity() {
                 bind.next.alpha = 1f
                 bind.previous.alpha = 1f
             }
+        }
+    }
+
+    // When player is clicked and controls are hidden, show them
+    private fun showControls() {
+        bind.next.alpha = nextButtonAlpha
+        bind.previous.alpha = prevButtonAlpha
+
+        bind.playPause.visibility = View.VISIBLE
+        bind.next.visibility = View.VISIBLE
+        bind.previous.visibility = View.VISIBLE
+    }
+
+    // When player is clicked and controls are visible, hide them
+    private fun hideControls() {
+        prevButtonAlpha = bind.previous.alpha
+        nextButtonAlpha = bind.next.alpha
+
+        bind.playPause.visibility = View.GONE
+        bind.next.visibility = View.GONE
+        bind.previous.visibility = View.GONE
+    }
+
+    // Next button must load the next video
+    private fun nextVideo() {
+        if ((currentVideo + 1) < videos.size) {
+            player.stop()
+            loadVideo(videos[currentVideo + 1], currentVideo + 1)
+            currentVideo++
+        } else {
+            Toast.makeText(this, "This is the last video!", Toast.LENGTH_SHORT).show()
+            bind.next.alpha = 0.6f
+        }
+    }
+
+    // Previous button must load the previous video
+    private fun previousVideo() {
+        if ((currentVideo - 1) >= 0) {
+            player.stop()
+            loadVideo(videos[currentVideo - 1], currentVideo - 1)
+            currentVideo--
+        } else {
+            Toast.makeText(this, "This is the first video!", Toast.LENGTH_SHORT).show()
+            bind.previous.alpha = 0.6f
         }
     }
 }
