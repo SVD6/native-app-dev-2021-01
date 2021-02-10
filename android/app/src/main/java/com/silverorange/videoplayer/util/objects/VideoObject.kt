@@ -7,7 +7,7 @@ class VideoObject {
     var hlsURL: String? = null
     var fullURL: String? = null
     var description: String? = null
-    var publishedAt: Any? = null
+    var publishedAt: String? = null
     var author: Author? = null
 }
 
