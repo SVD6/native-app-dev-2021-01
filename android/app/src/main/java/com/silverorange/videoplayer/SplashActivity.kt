@@ -35,7 +35,7 @@ class SplashActivity : AppCompatActivity() {
                     // Launch the main activity after one second just so the screen isn't flashing
                     Handler(Looper.getMainLooper()).postDelayed({
                         launchMainActivity(jsonData)
-                    }, 1000)
+                    }, 1500)
                 } else {
                     throw IOException("Unexpected code $response")
                 }
