@@ -1,8 +1,5 @@
 <resources>
     <string name="app_name">Video Player</string>
-    <string name="sample_title">Sample Title</string>
-    <string name="sample_author">Sample Author</string>
-    <string name="sample_description">Sample Description</string>
     <string name="next_button">Next Button</string>
     <string name="play_and_pause_button">Play and Pause Button</string>
     <string name="previous_button">Previous Button</string>

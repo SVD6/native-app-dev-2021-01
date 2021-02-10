@@ -77,7 +77,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/black"
-                    android:text="@string/sample_title"
                     android:textSize="@dimen/huge_text"
                     android:textStyle="bold" />
 
@@ -85,16 +84,15 @@
                     android:id="@+id/video_author"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/sample_author"
-                    android:textStyle="italic"
+                    android:layout_marginBottom="@dimen/xs_medium_element_padding"
                     android:textSize="@dimen/medium_text"
-                    android:layout_marginBottom="@dimen/xs_medium_element_padding"/>
+                    android:textStyle="italic" />
 
                 <TextView
                     android:id="@+id/video_details"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/sample_description" />
+                    android:textColor="@color/black" />
 
             </LinearLayout>
         </ScrollView>
