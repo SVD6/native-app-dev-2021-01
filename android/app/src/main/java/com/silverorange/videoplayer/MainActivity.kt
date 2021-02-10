@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var videos: MutableList<VideoObject>
 
     private var showControls = false
+    private var currentVideo = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,6 +72,35 @@ class MainActivity : AppCompatActivity() {
                 showControls = true
             }
         }
+
+        bind.next.setOnClickListener {
+            nextVideo()
+        }
+
+        bind.previous.setOnClickListener {
+            previousVideo()
+        }
+    }
+
+    private fun nextVideo() {
+        Toast.makeText(this, "Next Video", Toast.LENGTH_SHORT).show()
+        if ((currentVideo + 1) <= videos.size) {
+            player.stop()
+            loadVideo(videos[currentVideo + 1], currentVideo + 1)
+            currentVideo++
+        } else {
+            Toast.makeText(this, "No more videos!", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun previousVideo() {
+        if ((currentVideo - 1) >= 0) {
+            player.stop()
+            loadVideo(videos[currentVideo - 1], currentVideo - 1)
+            currentVideo--
+        } else {
+            Toast.makeText(this, "This is the first video!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -95,7 +125,7 @@ class MainActivity : AppCompatActivity() {
         videos.sortBy { it.publishedAt }
 
         // Load First Video
-        loadVideo(videos[0])
+        loadVideo(videos[0], 0)
 
         // Attempt Margin fix
         val params = bind.playPause.layoutParams as ViewGroup.MarginLayoutParams
@@ -104,13 +134,26 @@ class MainActivity : AppCompatActivity() {
         bind.playPause.layoutParams = params
     }
 
-    private fun loadVideo(video: VideoObject) {
+    private fun loadVideo(video: VideoObject, position: Int) {
+        // Load video to player
         player.setMediaItem(MediaItem.fromUri(video.hlsURL!!))
         player.prepare()
 
+        // Set the video details
         bind.videoTitle.text = video.title
         bind.videoAuthor.text = video.author!!.name
         markwon.setMarkdown(bind.videoDetails, video.description!!)
+
+        // Next/Prev button logic
+//        if (position == 0) {
+//            bind.previous.isEnabled = false
+//        }
+//        if (position == videos.size - 1) {
+//            bind.next.isEnabled = false
+//        }
     }
 
+    override fun onBackPressed() {
+        finishAffinity()
+    }
 }
