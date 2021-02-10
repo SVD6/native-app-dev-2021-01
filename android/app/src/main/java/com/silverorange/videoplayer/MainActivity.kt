@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             loadData(intent.getStringExtra("jsonData")!!)
         }
 
+        // Button Logic
         bind.playPause.setOnClickListener {
             if (player.isPlaying) {
                 player.pause()
@@ -79,6 +80,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // When player is clicked and controls are hidden, show them
     private fun showControls() {
         bind.next.alpha = nextButtonAlpha
         bind.previous.alpha = prevButtonAlpha
@@ -88,6 +90,7 @@ class MainActivity : AppCompatActivity() {
         bind.previous.visibility = View.VISIBLE
     }
 
+    // When player is clicked and controls are visible, hide them
     private fun hideControls() {
         prevButtonAlpha = bind.previous.alpha
         nextButtonAlpha = bind.next.alpha
@@ -97,6 +100,7 @@ class MainActivity : AppCompatActivity() {
         bind.previous.visibility = View.GONE
     }
 
+    // Next button must load the next video
     private fun nextVideo() {
         if ((currentVideo + 1) < videos.size) {
             player.stop()
@@ -108,6 +112,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Previous button must load the previous video
     private fun previousVideo() {
         if ((currentVideo - 1) >= 0) {
             player.stop()
@@ -119,10 +124,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // Load the data from the API request into an list of VideoObjects
     @RequiresApi(Build.VERSION_CODES.O)
     private fun loadData(jsonData: String) {
         val jsonArray = JSONArray(jsonData)
-        // Load the JSON data into a list of VideoObjects
+        // Create new VideoObject for each jsonObject in the jsonArray
         for (i in 0 until jsonArray.length()) {
             val jsonObject = jsonArray.getJSONObject(i)
             val video = VideoObject()
@@ -145,6 +151,7 @@ class MainActivity : AppCompatActivity() {
         loadVideo(videos[0], 0)
     }
 
+    // Function for loading a new video into the player view + filling in details
     private fun loadVideo(video: VideoObject, position: Int) {
         // Load video to player
         player.setMediaItem(MediaItem.fromUri(video.hlsURL!!))
@@ -172,9 +179,5 @@ class MainActivity : AppCompatActivity() {
                 bind.previous.alpha = 1f
             }
         }
-    }
-
-    override fun onBackPressed() {
-        finishAffinity()
     }
 }
