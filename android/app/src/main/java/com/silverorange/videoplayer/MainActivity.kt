@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
         // Set the video details
         bind.videoTitle.text = video.title
         bind.videoAuthor.text = video.author!!.name
-        markwon.setMarkdown(bind.videoDetails, video.description!!)
+        markwon.setMarkdown(bind.videoDescription, video.description!!)
 
         showControls = true
 
